@@ -4,14 +4,14 @@ html {
 
 *, *:before, *:after {
   box-sizing: inherit;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 }
 
 #map {
   width: 1600px;
   line-height: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .tile {
