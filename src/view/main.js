@@ -1,5 +1,4 @@
 var Cycle = require('cyclejs'),
-    assign = Object.assign || require('object.assign'),
     h = Cycle.h;
 
 var vrTile = function (tiles, ticker) {

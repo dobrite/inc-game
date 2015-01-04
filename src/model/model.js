@@ -1,5 +1,5 @@
 var Cycle = require('cyclejs'),
-    assign = Object.assign || require('object.assign'),
+    _ = require('lodash'),
     Rx = Cycle.Rx;
 
 var TICK_RATE = 250;
@@ -42,7 +42,7 @@ module.exports = Cycle.createModel(
       gameState.gameState$,
       viewState.viewState$,
       function (world, gs, vs) {
-        var gs = assign(gs, world);
+        var gs = _.assign(gs, world);
         return {
           gs: gs,
           vs: vs,

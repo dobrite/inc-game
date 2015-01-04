@@ -1,5 +1,5 @@
 var Cycle  = require('cyclejs'),
-    assign = Object.assign || require('object.assign'),
+    _ = require('lodash'),
     tile   = require('./tile');
 
 var WIDTH = 50;
@@ -48,7 +48,7 @@ var defaultGameState = {
 // TODO this should maybe go in an appState that merges world, view and game state and
 // loads from localstorage
 //var savedGameState = JSON.parse(localStorage.getItem('inc-game-state')) || {};
-//var combinedGameState = assign(defaultGameState, savedGameState);
+//var combinedGameState = _.assign(defaultGameState, savedGameState);
 
 module.exports = Cycle.createDataFlowSource({
   world$: Rx.Observable.just(defaultGameState)
