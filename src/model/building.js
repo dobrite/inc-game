@@ -16,8 +16,8 @@ var BuildingDataFlowNode = Cycle.createDataFlowNode(['tile$', 'ticker$'], functi
     return {
       events: ['tileClick$'],
       vtree$: model.tile$.map(function (tile) {
-        return h('.tile.' + tile.type + ((tile.selected) ? '.selected' : ''),
-                { 'key': tile.y + '.' + tile.x,
+        return h(`.tile.${tile.type}${(tile.selected) ? '.selected' : ''}`,
+                { 'key': `${tile.y}.${tile.x}`,
                   'attributes': {
                     'data-y': tile.y,
                     'data-x': tile.x },

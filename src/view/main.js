@@ -17,8 +17,8 @@ var vrTile = function (tiles, ticker) {
     })
   });
 
-  return h('.tile.' + first.type + ((first.selected) ? '.selected' : ''),
-          { 'key': first.y + '.' + first.x,
+  return h(`.tile.${first.type}${(first.selected) ? '.selected' : ''}`,
+          { 'key': `${first.y}.${first.x}`,
             'attributes': {
               'data-y': first.y,
               'data-x': first.x },
@@ -40,19 +40,12 @@ var vrMap = function (world, ticker) {
 
 var vrResources = function (resources) {
   return h('#resources', Object.keys(resources).map(function(key) {
-    return key + ': ' + resources[key] + ' '; // XXX put each in own elem use css
+    return `${key}: ${resources[key]} `; // XXX put each in own elem use css
   }));
 };
 
 var vrStatus = function (selectedTile) {
-  return h('#status', [
-    'type: ',
-    selectedTile.type,
-    ' x: ',
-    String(selectedTile.x),
-    ' y: ',
-    String(selectedTile.y),
-  ]);
+  return h('#status', `type: ${selectedTile.type} x: ${selectedTile.x} y: ${selectedTile.y}`);
 };
 
 var vrMain = function (ticker, as) {
