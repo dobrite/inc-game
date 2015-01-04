@@ -5,6 +5,7 @@ var Cycle   = require('cyclejs'),
 var initialGameState = {
   resources: {
     gold: 250,
+    fish: 0,
   },
 };
 

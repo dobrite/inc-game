@@ -26,13 +26,16 @@ module.exports = Cycle.createModel(
       });
 
     var provides$ = intent
-      .provides$.map(function (a) {
+      .provides$.map(function (resources) {
         return function (as) {
-          //console.log(a, as);
-          // TODO fix this so as.gs gets fish!
+          Object.keys(resources).forEach(function (resource) {
+            as.gs.resources[resource] += resources[resource];
+          });
           return as;
         };
-      });
+      })
+      .publish()
+      .refCount();
 
     var state = Rx.Observable.combineLatest(
       world.world$,
@@ -48,12 +51,16 @@ module.exports = Cycle.createModel(
 
     return {
       appState$: Rx.Observable
-        .merge(tileSelected$)
+        .merge(tileSelected$, provides$)
         .merge(state)
         .scan(function (as, f) {
           return f(as);
         })
-        .publish().refCount(),
-      ticker$: Rx.Observable.interval(TICK_RATE).startWith(0),
+        .publish()
+        .refCount(),
+      ticker$: Rx.Observable
+        .interval(TICK_RATE)
+        .publish()
+        .refCount(),
     };
 });

@@ -6,17 +6,16 @@ var FisheryDataFlowNode = Cycle.createDataFlowNode(['tile$', 'ticker$'], functio
   var FisheryModel = Cycle.createModel(['tile$', 'ticker$'], [], function (attributes, intent) {
     return {
       provides$: attributes.ticker$.map(function (a) {
-        console.log(a);
         return { fish: 1 };
       }),
       tile$: attributes.tile$,
     };
   });
 
-  var FisheryView = Cycle.createView(['tile$', 'provides$'], function (model) {
+  var FisheryView = Cycle.createView(['tile$'], function (model) {
     return {
       events: ['tileClick$'],
-      vtree$: Rx.Observable.combineLatest(model.tile$, model.provides$, function (tile, provides) {
+      vtree$: model.tile$.map(function (tile) {
         return h('.tile.' + tile.type + ((tile.selected) ? '.selected' : ''),
                 { 'key': tile.y + '.' + tile.x,
                   'attributes': {

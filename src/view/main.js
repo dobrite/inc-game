@@ -47,10 +47,9 @@ var vrMap = function (world, ticker) {
 };
 
 var vrResources = function (resources) {
-  return h('#resources', [
-    'gold: ',
-    String(resources.gold),
-  ]);
+  return h('#resources', Object.keys(resources).map(function(key) {
+    return key + ': ' + resources[key] + ' '; // XXX put each in own elem use css
+  }));
 };
 
 var vrStatus = function (selectedTile) {
@@ -64,7 +63,7 @@ var vrStatus = function (selectedTile) {
   ]);
 };
 
-var vrMain = function (as, ticker) {
+var vrMain = function (ticker, as) {
   return h('section', [
     vrMap(as.gs.world, ticker),
     vrResources(as.gs.resources),
@@ -78,8 +77,8 @@ module.exports = Cycle.createView(['appState$', 'ticker$'], function (model) {
       'tileClick$',
       'provides$',
     ],
-    vtree$: Rx.Observable.combineLatest(model.appState$, model.ticker$, function(as, ticker) {
-      return vrMain(as, ticker);
+    vtree$: model.ticker$.withLatestFrom(model.appState$, function(ticker, as) {
+      return vrMain(ticker, as);
     }),
   };
 });
