@@ -4,7 +4,7 @@
   "main": "src/app.js",
   "author": "Dave O",
   "dependencies" : {
-    "cyclejs": "0.7.0",
+    "cyclejs": "git://github.com/dobrite/cycle.git#do/rx_head",
     "object.assign": "1.1.1"
   },
   "devDependencies": {
