@@ -4,16 +4,26 @@ var terrain = [
   'forest',
 ]
 
-var Tile = function (y, x, type) {
-  this.y = y;
-  this.x = x;
-  this.type = type;
+class Tile {
+  constructor(props) {
+    this.y = props.y;
+    this.x = props.x;
+    this.type = props.type;
+  }
 }
 
-//Tile.prototype.isTerrain = function () {
-//  return terrain.indexOf(this.type) > -1
-//}
+class Fishery extends Tile {
+  constructor(props) {
+    super(props);
+    this.type = 'fishery';
+  }
+
+  provides() {
+    return { fish: 1 };
+  }
+}
 
 module.exports = {
   Tile: Tile,
+  Fishery: Fishery,
 }

@@ -1,6 +1,5 @@
 var Cycle   = require('cyclejs'),
-    tile    = require('./tile'),
-    fishery = require('./fishery');
+    tile    = require('./tile');
 
 var initialGameState = {
   resources: {

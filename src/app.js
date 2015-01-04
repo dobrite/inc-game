@@ -5,11 +5,10 @@ var Cycle        = require('cyclejs'),
     InitialModel = require('./model/world'),
     InitialView  = require('./model/view'),
     InitialGame  = require('./model/game'),
-    fishery      = require('./model/fishery');
+    building     = require('./model/building');
 
 var renderer = Cycle.createRenderer('#game');
-renderer.registerCustomElement('fishery', fishery);
-//renderer.delegator.listenTo('mouseover');
+renderer.registerCustomElement('fishery', building);
 renderer.inject(View);
 Intent.inject(View);
 View.inject(Model);

@@ -23,17 +23,17 @@ var genWorld = function () {
         type = 'forest';
       }
 
-      world[y][x] = [new tile.Tile(y, x, type)];
+      world[y][x] = [new tile.Tile({ y, x, type })];
 
       // TODO remove this is for debug
       if (y == 13 && x == 5) {
-        world[y][x].push(new tile.Tile(13, 5, 'fishery'));
+        world[y][x].push(new tile.Fishery({y, x}));
       }
       if (y == 14 && x == 5) {
-        world[y][x].push(new tile.Tile(14, 5, 'fishery'));
+        world[y][x].push(new tile.Fishery({y, x}));
       }
       if (y == 15 && x == 5) {
-        world[y][x].push(new tile.Tile(15, 5, 'fishery'));
+        world[y][x].push(new tile.Fishery({y, x}));
       }
     }
   }
