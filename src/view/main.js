@@ -1,17 +1,10 @@
 var Cycle = require('cyclejs'),
-    h = Cycle.h;
+    h = Cycle.h,
+    _ = require('lodash');
 
 var vrTile = function (tiles, ticker) {
-  var first,
-      rest = [];
-
-  tiles.forEach(function (tile, i) {
-    if (i == 0) {
-      first = tile;
-    } else {
-      rest.push(tile);
-    }
-  });
+  var first = _.first(tiles),
+      rest = _.rest(tiles);
 
   rest = rest.map(function (tile) {
     return h(tile.type, {
