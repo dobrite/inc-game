@@ -1,0 +1,67 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+#map {
+  width: 1600px;
+  line-height: 0;
+}
+
+.tile {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.tile:hover {
+  border: 1px dotted Silver;
+}
+
+.tile.selected {
+  border: 1px solid Black;
+}
+
+.tile.plain {
+  background-color: Yellow;
+  z-index: 1;
+}
+
+.tile.ocean {
+  background-color: Blue;
+  z-index: 1;
+}
+
+.tile.forest {
+  background-color: Green;
+  z-index: 1;
+}
+
+.tile.fishery {
+  background-color: SteelBlue;
+  z-index: 2;
+}
+
+#status {
+  border: 1px solid black;
+  position: absolute;
+  top: 200px;
+  left: 800px;
+  width: 200px;
+  height: 600px;
+}
+
+#resources {
+  border: 1px solid black;
+  position: absolute;
+  top: 0;
+  left: 800px;
+  width: 200px;
+  height: 200px;
+}
