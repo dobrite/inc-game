@@ -30,22 +30,18 @@ html {
 
 .tile.plain {
   background-color: Yellow;
-  z-index: 1;
 }
 
 .tile.ocean {
   background-color: Blue;
-  z-index: 1;
 }
 
 .tile.forest {
   background-color: Green;
-  z-index: 1;
 }
 
 .tile.fishery {
   background-color: SteelBlue;
-  z-index: 2;
 }
 
 #status {
