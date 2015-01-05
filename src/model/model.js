@@ -33,9 +33,7 @@ module.exports = Cycle.createModel(
           });
           return as;
         };
-      })
-      .publish()
-      .refCount();
+      });
 
     var state = Rx.Observable.combineLatest(
       world.world$,

@@ -16,10 +16,15 @@ class Fishery extends Tile {
   constructor(props) {
     super(props);
     this.type = 'fishery';
+    this.cost = { gold: 100 };
   }
 
   provides() {
     return { fish: 1 };
+  }
+
+  costs() {
+    return this.cost;
   }
 }
 
