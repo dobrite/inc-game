@@ -4,14 +4,8 @@ var Cycle = require('cyclejs'),
 
 var TICK_RATE = 250;
 
-module.exports = Cycle.createModel(
-  ['tileClick$', 'provides$'],
-  ['world$'],
-  ['gameState$'],
-  ['viewState$'],
-  function (intent, world, gameState, viewState) {
-    var tileSelected$ = intent
-      .tileClick$.map(function (coords) {
+module.exports = Cycle.createModel(function (intent, world, gameState, viewState) {
+    var tileSelected$ = intent.get('tileClick$').map(function (coords) {
         return function (as) {
           var last = as.vs.selectedTile;
           last.selected = false;
@@ -25,8 +19,7 @@ module.exports = Cycle.createModel(
         };
       });
 
-    var provides$ = intent
-      .provides$.map(function (resources) {
+    var provides$ = intent.get('provides$').map(function (resources) {
         return function (as) {
           Object.keys(resources).forEach(function (resource) {
             as.gs.resources[resource] += resources[resource];
@@ -36,9 +29,9 @@ module.exports = Cycle.createModel(
       });
 
     var state = Rx.Observable.combineLatest(
-      world.world$,
-      gameState.gameState$,
-      viewState.viewState$,
+      world.get('world$'),
+      gameState.get('gameState$'),
+      viewState.get('viewState$'),
       function (world, gs, vs) {
         var gs = _.assign(gs, world);
         return {

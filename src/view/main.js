@@ -56,14 +56,10 @@ var vrMain = function (ticker, as) {
   ])
 };
 
-module.exports = Cycle.createView(['appState$', 'ticker$'], function (model) {
+module.exports = Cycle.createView(function (model) {
   return {
-    events: [
-      'tileClick$',
-      'provides$',
-    ],
-    vtree$: model.ticker$.withLatestFrom(model.appState$, function(ticker, as) {
+    vtree$: model.get('ticker$').withLatestFrom(model.get('appState$'), function(ticker, as) {
       return vrMain(ticker, as);
-    }),
+    })
   };
 });

@@ -2,31 +2,30 @@ var Cycle = require('cyclejs'),
     h = Cycle.h,
     Rx = Cycle.Rx;
 
-var BuildingDataFlowNode = Cycle.createDataFlowNode(['tile$', 'ticker$'], function (attributes) {
-  var BuildingModel = Cycle.createModel(['tile$', 'ticker$'], [], function (attributes, intent) {
+var BuildingDataFlowNode = Cycle.createDataFlowNode(function (attributes) {
+  var BuildingModel = Cycle.createModel(function (attributes, intent) {
     return {
-      provides$: attributes.ticker$.withLatestFrom(attributes.tile$, function (ticker, tile) {
+      provides$: attributes.get('ticker$').withLatestFrom(attributes.get('tile$'), function (ticker, tile) {
         return tile.provides();
       }),
-      tile$: attributes.tile$,
+      tile$: attributes.get('tile$'),
     };
   });
 
-  var BuildingView = Cycle.createView(['tile$'], function (model) {
+  var BuildingView = Cycle.createView(function (model) {
     return {
-      events: ['tileClick$'],
-      vtree$: model.tile$.map(function (tile) {
+      vtree$: model.get('tile$').map(function (tile) {
         return h(`.tile.${tile.type}${(tile.selected) ? '.selected' : ''}`,
                 { 'key': `${tile.y}.${tile.x}`,
                   'attributes': {
                     'data-y': tile.y,
                     'data-x': tile.x },
                   'ev-click': 'tileClick$' });
-      }),
+      })
     };
   });
 
-  var BuildingIntent = Cycle.createIntent([], function (view) {
+  var BuildingIntent = Cycle.createIntent(function (view) {
     return {};
   });
 
@@ -35,9 +34,9 @@ var BuildingDataFlowNode = Cycle.createDataFlowNode(['tile$', 'ticker$'], functi
   BuildingModel.inject(attributes, BuildingIntent);
 
   return {
-    vtree$: BuildingView.vtree$,
-    provides$: BuildingModel.provides$,
-    click$: BuildingView.tileClick$,
+    vtree$: BuildingView.get('vtree$'),
+    provides$: BuildingModel.get('provides$'),
+    click$: BuildingView.get('tileClick$'),
   };
 });
 
