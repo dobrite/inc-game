@@ -16,11 +16,11 @@ var BuildingDataFlowNode = Cycle.createDataFlowNode(function (attributes) {
     return {
       vtree$: model.get('tile$').map(function (tile) {
         return h(`.tile.${tile.type}${(tile.selected) ? '.selected' : ''}`,
-                { 'key': `${tile.y}.${tile.x}`,
-                  'attributes': {
+                { key: `${tile.y}.${tile.x}`,
+                  attributes: {
                     'data-y': tile.y,
                     'data-x': tile.x },
-                  'ev-click': 'tileClick$' });
+                  onclick: 'tileClick$' });
       })
     };
   });

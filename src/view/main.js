@@ -12,17 +12,17 @@ var vrTile = function (tiles, ticker) {
         ticker: ticker,
         tile: tile,
       },
-      'ev-provides': 'provides$',
-      'ev-click': 'tileClick$',
+      onprovides: 'provides$',
+      onclick: 'tileClick$',
     })
   });
 
   return h(`.tile.${first.type}${(first.selected) ? '.selected' : ''}`,
-          { 'key': `${first.y}.${first.x}`,
-            'attributes': {
+          { key: `${first.y}.${first.x}`,
+            attributes: {
               'data-y': first.y,
               'data-x': first.x },
-            'ev-click': 'tileClick$' },
+            onclick: 'tileClick$' },
           rest);
 };
 
