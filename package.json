@@ -3,14 +3,15 @@
   "version": "0.0.1",
   "main": "src/app.js",
   "author": "Dave O",
-  "dependencies" : {
+  "dependencies": {
     "cyclejs": "git://github.com/dobrite/cycle.git#do/rx_head",
     "lodash": "2.4.1"
   },
   "devDependencies": {
-    "webpack": "~1.4.11",
+    "6to5": "^2.6.3",
+    "6to5-loader": "^1.0.0",
     "css-loader": "~0.9.0",
-    "es6-loader": "~0.2.0"
+    "webpack": "~1.4.11"
   },
   "scripts": {
     "start": "webpack --watch --colors --progress"

@@ -11,7 +11,7 @@ module.exports = {
     }, {
       test: /\.js$/,
       exclude: [/node_modules/],
-      loader: "es6-loader"
+      loader: "6to5-loader"
     }]
   }
 };
