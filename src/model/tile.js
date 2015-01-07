@@ -14,21 +14,35 @@ class Tile {
 
 class Fishery extends Tile {
   constructor(props) {
+    props.type = 'fishery';
+    props.cost = 100; // TODO this isn't right
     super(props);
-    this.type = 'fishery';
-    this.cost = { gold: 100 };
   }
 
   provides() {
     return { fish: 1 };
   }
 
-  costs() {
-    return this.cost;
+  // no public or static class variables yet
+  static costs() {
+    return {
+      gold: 100
+    };
+  }
+
+  static type() {
+    return 'fishery';
   }
 }
 
-module.exports = {
-  Tile: Tile,
+var tiles = {
   Fishery: Fishery,
 }
+
+tiles['BUILDING_COSTS'] = _.map(tiles, function (tile) {
+  return { [tile.type()]: tile.costs() };
+});
+
+tiles['Tile'] = Tile;
+
+module.exports = tiles

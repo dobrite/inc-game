@@ -39,20 +39,25 @@ var vrMap = function (world, ticker) {
 };
 
 var vrResources = function (resources) {
-  return h('#resources', Object.keys(resources).map(function(key) {
-    return `${key}: ${resources[key]} `; // XXX put each in own elem use css
+  return h('#resources', _.keys(resources).map(function(key) {
+    return h('div', `${key}: ${resources[key]}`);
   }));
 };
 
-var vrStatus = function (selectedTile) {
-  return h('#status', `type: ${selectedTile.type} x: ${selectedTile.x} y: ${selectedTile.y}`);
+var vrStatus = function (vs) {
+  return h('#status', [
+    h('div', `type: ${vs.selectedTile.type}`),
+    h('div', `x: ${vs.selectedTile.x}`),
+    h('div', `y: ${vs.selectedTile.y}`),
+    h('div', `${_.flatten(vs.affords, _.keys).join(' ')}`),
+  ]);
 };
 
 var vrMain = function (ticker, as) {
   return h('section', [
     vrMap(as.gs.world, ticker),
     vrResources(as.gs.resources),
-    vrStatus(as.vs.selectedTile),
+    vrStatus(as.vs),
   ])
 };
 

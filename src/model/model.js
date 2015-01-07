@@ -1,6 +1,7 @@
 var Cycle = require('cyclejs'),
-    _ = require('lodash'),
-    Rx = Cycle.Rx;
+    _     = require('lodash'),
+    Rx    = Cycle.Rx,
+    tile  = require('./tile');
 
 var TICK_RATE = 250;
 
@@ -21,7 +22,7 @@ module.exports = Cycle.createModel(function (intent, world, gameState, viewState
 
     var provides$ = intent.get('provides$').map(function (resources) {
         return function (as) {
-          Object.keys(resources).forEach(function (resource) {
+          _.keys(resources).forEach(function (resource) {
             as.gs.resources[resource] += resources[resource];
           });
           return as;
@@ -40,6 +41,16 @@ module.exports = Cycle.createModel(function (intent, world, gameState, viewState
         };
       });
 
+    var affords = function (as) {
+      var resources = as.gs.resources;
+      as.vs.affords = tile.BUILDING_COSTS.filter(function (building) {
+        return _.every(_.values(building)[0], function (amt, type) {
+          return resources[type] !== 'undefined' && resources[type] >= amt
+        })
+      });
+      return as;
+    }
+
     return {
       appState$: Rx.Observable
         .merge(tileSelected$, provides$)
@@ -47,6 +58,7 @@ module.exports = Cycle.createModel(function (intent, world, gameState, viewState
         .scan(function (as, f) {
           return f(as);
         })
+        .map(affords)
         .publish()
         .refCount(),
       ticker$: Rx.Observable
