@@ -7,18 +7,25 @@ var TICK_RATE = 250;
 
 module.exports = Cycle.createModel(function (intent, world, gameState, viewState) {
     var tileSelected$ = intent.get('tileClick$').map(function (coords) {
-        return function (as) {
-          var last = as.vs.selectedTile;
-          last.selected = false;
+      return function (as) {
+        var last = as.vs.selectedTile;
+        last.selected = false;
 
-          var tiles = as.gs.world[coords.y][coords.x]
-          var tile = tiles[tiles.length - 1];
-          tile.selected = true;
-          as.vs.selectedTile = tile;
+        var tiles = as.gs.world[coords.y][coords.x]
+        var tile = tiles[tiles.length - 1];
+        tile.selected = true;
+        as.vs.selectedTile = tile;
 
-          return as;
-        };
-      });
+        return as;
+      };
+    });
+
+    var buildingStamp$ = intent.get('buildingStamp$').map(function (type) {
+      return function (as) {
+        as.vs.buildingStamp = type;
+        return as;
+      };
+    });
 
     var provides$ = intent.get('provides$').map(function (resources) {
         return function (as) {
@@ -53,7 +60,7 @@ module.exports = Cycle.createModel(function (intent, world, gameState, viewState
 
     return {
       appState$: Rx.Observable
-        .merge(tileSelected$, provides$)
+        .merge(tileSelected$, provides$, buildingStamp$)
         .merge(state)
         .scan(function (as, f) {
           return f(as);

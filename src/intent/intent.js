@@ -9,6 +9,9 @@ module.exports = Cycle.createIntent(function (view) {
         x: parseInt(e.target.dataset.x, 10),
       }
     }),
+    buildingStamp$: view.get('buildingStamp$').map(function (e) {
+      return { type: e.target.value };
+    }),
     provides$: view.get('provides$'),
   };
 });

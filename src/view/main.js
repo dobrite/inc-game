@@ -2,6 +2,7 @@ var Cycle = require('cyclejs'),
     h = Cycle.h,
     _ = require('lodash');
 
+
 var vrTile = function (tiles, ticker) {
   var first = _.first(tiles),
       rest = _.rest(tiles);
@@ -39,8 +40,18 @@ var vrMap = function (world, ticker) {
 };
 
 var vrResources = function (resources) {
-  return h('#resources', _.keys(resources).map(function(key) {
+  return h('#resources', _.keys(resources).map(function (key) {
     return h('div', `${key}: ${resources[key]}`);
+  }));
+};
+
+var vrAffords = function (affords) {
+  return h('#affords', _.flatten(affords, _.keys).map(function (bldg) {
+    return h('button.bldg',
+             { type: 'button',
+               value: bldg,
+               onclick: 'buildingStamp$' },
+             bldg);
   }));
 };
 
@@ -49,12 +60,17 @@ var vrStatus = function (vs) {
     h('div', `type: ${vs.selectedTile.type}`),
     h('div', `x: ${vs.selectedTile.x}`),
     h('div', `y: ${vs.selectedTile.y}`),
-    h('div', `${_.flatten(vs.affords, _.keys).join(' ')}`),
+    vrAffords(vs.affords),
   ]);
+};
+
+var vrStyle = function (as) {
+  return h('style', `.tile:hover { background-color: black;}`);
 };
 
 var vrMain = function (ticker, as) {
   return h('section', [
+    vrStyle(as.vs),
     vrMap(as.gs.world, ticker),
     vrResources(as.gs.resources),
     vrStatus(as.vs),
