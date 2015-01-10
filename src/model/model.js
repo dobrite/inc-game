@@ -5,20 +5,23 @@ var Cycle = require('cyclejs'),
 
 var TICK_RATE = 250;
 
+var storeLastTile = function (key, coords) {
+  return function (as) {
+    var last = as.vs.tile[key];
+    delete last[key];
+
+    var tiles = as.gs.world[coords.y][coords.x]
+    var tile = tiles[0];
+    tile[key] = true;
+    as.vs.tile[key] = tile;
+
+    return as;
+  };
+};
+
 module.exports = Cycle.createModel(function (intent, world, gameState, viewState) {
-    var tileSelected$ = intent.get('tileClick$').map(function (coords) {
-      return function (as) {
-        var last = as.vs.selectedTile;
-        last.selected = false;
-
-        var tiles = as.gs.world[coords.y][coords.x]
-        var tile = tiles[tiles.length - 1];
-        tile.selected = true;
-        as.vs.selectedTile = tile;
-
-        return as;
-      };
-    });
+    var tileSelected$ = intent.get('tileClick$').map(storeLastTile.bind(null, 'selected'));
+    var tileHovered$ = intent.get('tileHover$').map(storeLastTile.bind(null, 'hovered'));
 
     var buildingStamp$ = intent.get('buildingStamp$').map(function (type) {
       return function (as) {
@@ -60,7 +63,7 @@ module.exports = Cycle.createModel(function (intent, world, gameState, viewState
 
     return {
       appState$: Rx.Observable
-        .merge(tileSelected$, provides$, buildingStamp$)
+        .merge(tileSelected$, tileHovered$, provides$, buildingStamp$)
         .merge(state)
         .scan(function (as, f) {
           return f(as);

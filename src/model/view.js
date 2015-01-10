@@ -2,7 +2,10 @@ var Cycle = require('cyclejs'),
     tile  = require('./tile');
 
 var initialViewState = {
-  selectedTile: new tile.Tile({ y: 0, x: 0 }),
+  tile: {
+    selected: new tile.Tile({ y: 0, x: 0 }),
+    hovered:  new tile.Tile({ y: 0, x: 0 }),
+  },
 };
 
 module.exports = Cycle.createDataFlowSource({
