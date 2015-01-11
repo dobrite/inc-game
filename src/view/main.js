@@ -1,6 +1,7 @@
 var Cycle = require('cyclejs'),
     h = Cycle.h,
-    _ = require('lodash');
+    _ = require('lodash'),
+    tileView = require('./tile');
 
 var vrTile = function (tiles, ticker) {
   var first = _.first(tiles),
@@ -17,14 +18,7 @@ var vrTile = function (tiles, ticker) {
     })
   });
 
-  return h(`.tile.${first.type}${(first.selected) ? '.selected' : ''}${(first.hovered) ? '.hover' : ''}`,
-          { key: `${first.y}.${first.x}`,
-            attributes: {
-              'data-y': first.y,
-              'data-x': first.x },
-            onclick: 'tileClick$',
-            onmouseover: 'tileHover$' },
-          rest);
+  return tileView(first, rest);
 };
 
 var vrRow = function (row, ticker) {

@@ -1,6 +1,7 @@
 var Cycle = require('cyclejs'),
     h = Cycle.h,
-    Rx = Cycle.Rx;
+    Rx = Cycle.Rx,
+    tileView = require('../view/tile');
 
 var BuildingDataFlowNode = Cycle.createDataFlowNode(function (attributes) {
   var BuildingModel = Cycle.createModel(function (attributes, intent) {
@@ -15,12 +16,7 @@ var BuildingDataFlowNode = Cycle.createDataFlowNode(function (attributes) {
   var BuildingView = Cycle.createView(function (model) {
     return {
       vtree$: model.get('tile$').map(function (tile) {
-        return h(`.tile.${tile.type}${(tile.selected) ? '.selected' : ''}`,
-                { key: `${tile.y}.${tile.x}`,
-                  attributes: {
-                    'data-y': tile.y,
-                    'data-x': tile.x },
-                  onclick: 'tileClick$' });
+        return tileView(tile)
       })
     };
   });
