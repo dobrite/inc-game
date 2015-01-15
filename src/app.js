@@ -5,7 +5,7 @@ var Cycle        = require('cyclejs'),
     InitialModel = require('./model/world'),
     InitialView  = require('./model/view'),
     InitialGame  = require('./model/game'),
-    building     = require('./model/building'),
+    building     = require('./custom_element/building'),
     { tileTypes } = require('./model/tile');
 
 var renderer = Cycle.createRenderer('#game');
