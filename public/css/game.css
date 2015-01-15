@@ -14,13 +14,22 @@ html {
   -ms-user-select: none;
 }
 
-.tile {
+.cell {
   width: 16px;
   height: 16px;
   display: inline-block;
+  position: relative;
 }
 
-.hover {
+.cell .tile {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.highlighted {
   border: 1px dotted Silver;
 }
 

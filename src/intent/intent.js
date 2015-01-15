@@ -14,7 +14,6 @@ module.exports = Cycle.createIntent(function (view) {
     buildingStamp$: view.get('buildingStamp$').map(function (e) {
       return { type: e.target.value };
     }),
-    provides$: view.get('provides$'),
     tileHover$: view.get('tileHover$').map(getTileCoords),
   };
 });

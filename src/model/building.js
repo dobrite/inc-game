@@ -1,37 +1,57 @@
 var Cycle = require('cyclejs'),
     h = Cycle.h,
-    Rx = Cycle.Rx,
-    tileView = require('../view/tile');
+    Rx = Cycle.Rx;
 
-var BuildingDataFlowNode = Cycle.createDataFlowNode(function (attributes) {
-  var BuildingModel = Cycle.createModel(function (attributes, intent) {
+var BuildingDataFlowNode = Cycle.createDataFlowNode(function (attrs) {
+  var BuildingModel = Cycle.createModel(function (attrs, intent) {
     return {
-      provides$: attributes.get('ticker$').withLatestFrom(attributes.get('tile$'), function (ticker, tile) {
-        return tile.provides();
-      }),
-      tile$: attributes.get('tile$'),
+      tile$: attrs.get('tile$'),
+      highlighted$: Rx.Observable
+        .merge(
+          intent.get('startHighlight$').map(function () { return true; }),
+          intent.get('stopHighlight$').map(function () { return false; })
+        ).startWith(false)
     };
   });
 
   var BuildingView = Cycle.createView(function (model) {
     return {
-      vtree$: model.get('tile$').map(function (tile) {
-        return tileView(tile)
+      vtree$: model.get('tile$').combineLatest(
+        model.get('highlighted$'),
+        function (tile, highlighted) {
+          var selected = (tile.selected) ? '.selected' : '';
+          var highlighted = (highlighted) ? '.highlighted' : '';
+
+          return h(
+            `.tile.${tile.type}${selected}${highlighted}`, {
+            key: `${tile.y}.${tile.x}`,
+            attributes: {
+              'data-y': tile.y,
+              'data-x': tile.x
+            },
+            onclick: 'tileClick$',
+            onmouseenter: 'mouseenter$',
+            onmouseleave: 'mouseleave$',
+          });
+
+          return tileView(tile);
       })
     };
   });
 
   var BuildingIntent = Cycle.createIntent(function (view) {
-    return {};
+    return {
+      startHighlight$: view.get('mouseenter$'),
+      stopHighlight$: view.get('mouseleave$')
+    };
   });
 
   BuildingIntent.inject(BuildingView);
   BuildingView.inject(BuildingModel);
-  BuildingModel.inject(attributes, BuildingIntent);
+  BuildingModel.inject(attrs, BuildingIntent);
 
   return {
     vtree$: BuildingView.get('vtree$'),
-    provides$: BuildingModel.get('provides$'),
     click$: BuildingView.get('tileClick$'),
   };
 });

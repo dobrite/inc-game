@@ -1,7 +1,8 @@
-var terrain = [
+var tileTypes = [
   'plain',
   'ocean',
   'forest',
+  'fishery',
 ]
 
 class Tile {
@@ -45,4 +46,7 @@ tiles['BUILDING_COSTS'] = _.map(tiles, function (tile) {
 
 tiles['Tile'] = Tile;
 
-module.exports = tiles
+module.exports = {
+  tiles: tiles,
+  tileTypes: tileTypes
+}

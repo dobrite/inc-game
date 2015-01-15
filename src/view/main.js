@@ -1,35 +1,28 @@
 var Cycle = require('cyclejs'),
     h = Cycle.h,
-    _ = require('lodash'),
-    tileView = require('./tile');
+    _ = require('lodash');
 
-var vrTile = function (tiles, ticker) {
-  var first = _.first(tiles),
-      rest = _.rest(tiles);
-
-  rest = rest.map(function (tile) {
-    return h(tile.type, {
-      attributes: {
-        ticker: ticker,
-        tile: tile,
-      },
-      onprovides: 'provides$',
-      onclick: 'tileClick$',
+var vrTile = function (tiles) {
+  return h(
+    '.cell',
+    tiles.map(function (tile) {
+      return h(tile.type, {
+        attributes: { tile: tile },
+        onclick: 'tileClick$'
+      });
     })
-  });
-
-  return tileView(first, rest);
+  )
 };
 
-var vrRow = function (row, ticker) {
+var vrRow = function (row) {
   return h('.row', row.map(function (tiles) {
-    return vrTile(tiles, ticker);
+    return vrTile(tiles);
   }));
 };
 
-var vrMap = function (world, ticker) {
+var vrMap = function (world) {
   return h('#map', world.map(function (row) {
-    return vrRow(row, ticker);
+    return vrRow(row);
   }));
 };
 
@@ -41,11 +34,12 @@ var vrResources = function (resources) {
 
 var vrAffords = function (affords) {
   return h('#affords', _.flatten(affords, _.keys).map(function (bldg) {
-    return h('button.bldg',
-             { type: 'button',
-               value: bldg,
-               onclick: 'buildingStamp$' },
-             bldg);
+    return h(
+      'button.bldg', {
+        type: 'button',
+        value: bldg,
+      }, bldg
+    );
   }));
 };
 
@@ -58,13 +52,9 @@ var vrStatus = function (vs) {
   ]);
 };
 
-var vrStyle = function (as) {
-  return h('style', `.tile:hover { background-color: black;}`);
-};
-
-var vrMain = function (ticker, as) {
+var vrMain = function (as) {
   return h('section', [
-    vrMap(as.gs.world, ticker),
+    vrMap(as.gs.world),
     vrResources(as.gs.resources),
     vrStatus(as.vs),
   ])
@@ -73,7 +63,7 @@ var vrMain = function (ticker, as) {
 module.exports = Cycle.createView(function (model) {
   return {
     vtree$: model.get('ticker$').withLatestFrom(model.get('appState$'), function(ticker, as) {
-      return vrMain(ticker, as);
+      return vrMain(as);
     })
   };
 });

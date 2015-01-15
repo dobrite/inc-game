@@ -1,6 +1,6 @@
-var Cycle  = require('cyclejs'),
+var Cycle = require('cyclejs'),
     _ = require('lodash'),
-    tile   = require('./tile');
+    { tiles } = require('./tile');
 
 var WIDTH = 50;
 var HEIGHT = 50;
@@ -23,17 +23,17 @@ var genWorld = function () {
         type = 'forest';
       }
 
-      world[y][x] = [new tile.Tile({ y, x, type })];
+      world[y][x] = [new tiles.Tile({ y, x, type })];
 
       // TODO remove this is for debug
       if (y == 13 && x == 5) {
-        world[y][x].push(new tile.Fishery({y, x}));
+        world[y][x].push(new tiles.Fishery({y, x}));
       }
       if (y == 14 && x == 5) {
-        world[y][x].push(new tile.Fishery({y, x}));
+        world[y][x].push(new tiles.Fishery({y, x}));
       }
       if (y == 15 && x == 5) {
-        world[y][x].push(new tile.Fishery({y, x}));
+        world[y][x].push(new tiles.Fishery({y, x}));
       }
     }
   }

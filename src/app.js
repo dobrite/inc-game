@@ -5,10 +5,15 @@ var Cycle        = require('cyclejs'),
     InitialModel = require('./model/world'),
     InitialView  = require('./model/view'),
     InitialGame  = require('./model/game'),
-    building     = require('./model/building');
+    building     = require('./model/building'),
+    { tileTypes } = require('./model/tile');
 
 var renderer = Cycle.createRenderer('#game');
-renderer.registerCustomElement('fishery', building);
+
+tileTypes.map(function (tile) {
+  renderer.registerCustomElement(tile, building);
+});
+
 renderer.inject(View);
 Intent.inject(View);
 View.inject(Model);
