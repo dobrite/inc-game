@@ -13,7 +13,6 @@ module.exports = Cycle.createIntent(function (view) {
     tileClick$: view.get('tileClick$').map(getTileCoords),
     buildingStamp$: view.get('buildingStamp$').map(function (e) {
       return { type: e.target.value };
-    }),
-    tileHover$: view.get('tileHover$').map(getTileCoords),
+    })
   };
 });
