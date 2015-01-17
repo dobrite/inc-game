@@ -16,7 +16,7 @@ class Tile {
 class Fishery extends Tile {
   constructor(props) {
     props.type = 'fishery';
-    props.cost = 100; // TODO this isn't right
+    this.cost = props.cost || 100; // TODO this isn't right
     super(props);
   }
 

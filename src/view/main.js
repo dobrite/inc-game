@@ -20,13 +20,13 @@ var vrRow = function (row) {
   }));
 };
 
-var vrMap = function (world) {
+var vrMap = function ({world}) {
   return h('#map', world.map(function (row) {
     return vrRow(row);
   }));
 };
 
-var vrResources = function (resources) {
+var vrResources = function ({resources}) {
   return h('#resources', _.keys(resources).map(function (key) {
     return h('div', `${key}: ${resources[key]}`);
   }));
@@ -43,27 +43,31 @@ var vrAffords = function (affords) {
   }));
 };
 
-var vrStatus = function (vs) {
+var vrStatus = function ({tile}) {
   return h('#status', [
-    h('div', `type: ${vs.tile.selected.type}`),
-    h('div', `x: ${vs.tile.selected.x}`),
-    h('div', `y: ${vs.tile.selected.y}`),
-    vrAffords(vs.affords),
+    h('div', `type: ${tile.type}`),
+    h('div', `x: ${tile.x}`),
+    h('div', `y: ${tile.y}`),
+    //vrAffords(vs.affords),
   ]);
 };
 
-var vrMain = function (as) {
+var vrMain = function (gs, vs, ws) {
   return h('section', [
-    vrMap(as.gs.world),
-    vrResources(as.gs.resources),
-    vrStatus(as.vs),
-  ])
+    vrMap(ws),
+    vrResources(gs),
+    vrStatus(vs),
+  ]);
 };
 
 module.exports = Cycle.createView(function (model) {
   return {
-    vtree$: model.get('appState$').map(function(as) {
-      return vrMain(as);
+    vtree$: Rx.Observable.combineLatest(
+      model.get('gameState$'),
+      model.get('viewState$'),
+      model.get('worldState$'),
+      function(gs, vs, ws) {
+        return vrMain(gs, vs, ws);
     })
   };
 });

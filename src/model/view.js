@@ -3,10 +3,12 @@ var Cycle = require('cyclejs'),
 
 var initialViewState = {
   tile: {
-    selected: new tiles.Tile({ y: 0, x: 0 })
-  },
+    y: 0,
+    x: 0,
+    type: 'blah',
+  }
 };
 
 module.exports = Cycle.createDataFlowSource({
-  viewState$: Rx.Observable.just(initialViewState)
+  initialViewState$: Rx.Observable.just(initialViewState)
 });

@@ -5,62 +5,58 @@ var Cycle = require('cyclejs'),
 
 var TICK_RATE = 250;
 
-var storeLastTile = function (key, coords) {
-  return function (as) {
-    var last = as.vs.tile[key];
-    delete last[key];
-
-    var tiles = as.gs.world[coords.y][coords.x]
-    var tile = tiles[tiles.length - 1];
-    tile[key] = true;
-    as.vs.tile[key] = tile;
-
-    return as;
-  };
-};
-
-module.exports = Cycle.createModel(function (intent, world, gameState, viewState) {
+module.exports = Cycle.createModel(function (intent, initialGameState, initialViewState) {
   var ticker$ = Rx.Observable.interval(TICK_RATE);
-  var tileSelected$ = intent.get('tileClick$').map(storeLastTile.bind(null, 'selected'));
-
   var provides$ = ticker$.map(function () {
-      return function (as) {
-        _.keys(resources).forEach(function (resource) {
-          as.gs.resources[resource] += resources[resource];
-        });
-        return as;
+      return function (gs) {
+        gs.buildings.forEach(function (bldg) {
+          _.map(bldg.provides(), function (amt, resource) {
+            gs.resources[resource] += amt;
+          });
+        })
+        return gs;
       };
     });
 
-  var state = Rx.Observable.combineLatest(
-    world.get('world$'),
-    gameState.get('gameState$'),
-    viewState.get('viewState$'),
-    function (world, gs, vs) {
-      var gs = _.assign(gs, world);
-      return {
-        gs: gs,
-        vs: vs,
-      };
-    });
-
-  var affords = function (as) {
-    var resources = as.gs.resources;
-    as.vs.affords = tiles.BUILDING_COSTS.filter(function (building) {
+  var affords = function (gs) {
+    var resources = gs.resources;
+    gs.vs.affords = tiles.BUILDING_COSTS.filter(function (building) {
       return _.every(_.values(building)[0], function (amt, type) {
         return resources[type] !== 'undefined' && resources[type] >= amt
       })
     });
-    return as;
+    return gs;
   }
 
+  var worldState$ = Rx.Observable
+    .merge(initialGameState.get('initialWorldState$'))
+
+  var gameState$ = Rx.Observable
+    .merge(initialGameState.get('initialGameState$'))
+    //.merge(provides$)
+    .scan(function (gs, f) {
+      return f(gs);
+    });
+
+  var tileSelected$ = intent.get('tileClick$')
+    .combineLatest(worldState$, function ({y, x}, ws) {
+      return function (vs) {
+        vs.tile = ws.world[y][x][ws.world[y][x].length - 1];
+        return vs
+      };
+    });
+
+  var viewState$ = Rx.Observable
+    .merge(initialViewState.get('initialViewState$'))
+    .merge(tileSelected$)
+    .scan(function (vs, f) {
+      return f(vs);
+    })
+
   return {
-    appState$: Rx.Observable
-      .merge(tileSelected$)
-      .merge(state)
-      .scan(function (as, f) {
-        return f(as);
-      })
-      .map(affords)
+    gameState$: gameState$,
+    viewState$: viewState$,
+    worldState$: worldState$
+    //affords$: gameState$.map(affords),
   };
 });
