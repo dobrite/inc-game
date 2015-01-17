@@ -11,7 +11,7 @@ var storeLastTile = function (key, coords) {
     delete last[key];
 
     var tiles = as.gs.world[coords.y][coords.x]
-    var tile = tiles[0];
+    var tile = tiles[tiles.length - 1];
     tile[key] = true;
     as.vs.tile[key] = tile;
 
@@ -20,8 +20,17 @@ var storeLastTile = function (key, coords) {
 };
 
 module.exports = Cycle.createModel(function (intent, world, gameState, viewState) {
-  var ticker$ = Rx.Observable.interval(1000);
+  var ticker$ = Rx.Observable.interval(TICK_RATE);
   var tileSelected$ = intent.get('tileClick$').map(storeLastTile.bind(null, 'selected'));
+
+  var provides$ = ticker$.map(function () {
+      return function (as) {
+        _.keys(resources).forEach(function (resource) {
+          as.gs.resources[resource] += resources[resource];
+        });
+        return as;
+      };
+    });
 
   var state = Rx.Observable.combineLatest(
     world.get('world$'),
@@ -53,11 +62,5 @@ module.exports = Cycle.createModel(function (intent, world, gameState, viewState
         return f(as);
       })
       .map(affords)
-      .publish()
-      .refCount(),
-    ticker$: Rx.Observable
-      .interval(TICK_RATE)
-      .publish()
-      .refCount(),
   };
 });

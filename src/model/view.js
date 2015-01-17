@@ -3,8 +3,7 @@ var Cycle = require('cyclejs'),
 
 var initialViewState = {
   tile: {
-    selected: new tiles.Tile({ y: 0, x: 0 }),
-    hovered:  new tiles.Tile({ y: 0, x: 0 }),
+    selected: new tiles.Tile({ y: 0, x: 0 })
   },
 };
 

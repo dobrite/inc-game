@@ -24,17 +24,6 @@ var genWorld = function () {
       }
 
       world[y][x] = [new tiles.Tile({ y, x, type })];
-
-      // TODO remove this is for debug
-      if (y == 13 && x == 5) {
-        world[y][x].push(new tiles.Fishery({y, x}));
-      }
-      if (y == 14 && x == 5) {
-        world[y][x].push(new tiles.Fishery({y, x}));
-      }
-      if (y == 15 && x == 5) {
-        world[y][x].push(new tiles.Fishery({y, x}));
-      }
     }
   }
 

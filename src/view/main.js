@@ -2,7 +2,7 @@ var Cycle = require('cyclejs'),
     h = Cycle.h,
     _ = require('lodash');
 
-var vrTile = function (tiles) {
+var vrCell = function (tiles) {
   return h(
     '.cell',
     tiles.map(function (tile) {
@@ -16,7 +16,7 @@ var vrTile = function (tiles) {
 
 var vrRow = function (row) {
   return h('.row', row.map(function (tiles) {
-    return vrTile(tiles);
+    return vrCell(tiles);
   }));
 };
 
@@ -62,7 +62,7 @@ var vrMain = function (as) {
 
 module.exports = Cycle.createView(function (model) {
   return {
-    vtree$: model.get('ticker$').withLatestFrom(model.get('appState$'), function(ticker, as) {
+    vtree$: model.get('appState$').map(function(as) {
       return vrMain(as);
     })
   };
