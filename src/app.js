@@ -10,7 +10,7 @@ var Cycle = require('cyclejs'),
 var renderer = Cycle.createRenderer('#game');
 
 tileTypes.map(function (tile) {
-  renderer.registerCustomElement(tile, building);
+  Cycle.registerCustomElement(tile, building);
 });
 
 renderer.inject(View);
