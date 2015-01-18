@@ -6,6 +6,9 @@ var initialViewState = {
     y: 0,
     x: 0,
     type: 'blah',
+  },
+  lastSelectedTile: {
+    selected: false,
   }
 };
 

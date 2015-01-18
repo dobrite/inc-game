@@ -8,40 +8,51 @@ var TICK_RATE = 250;
 module.exports = Cycle.createModel(function (intent, initialGameState, initialViewState) {
   var ticker$ = Rx.Observable.interval(TICK_RATE);
   var provides$ = ticker$.map(function () {
-      return function (gs) {
-        gs.buildings.forEach(function (bldg) {
-          _.map(bldg.provides(), function (amt, resource) {
-            gs.resources[resource] += amt;
+      return function ({ buildings, resources }) {
+        buildings.forEach(function (building) {
+          _.map(building.provides(), function (amt, resource) {
+            resources[resource] += amt;
           });
         })
-        return gs;
+        return { buildings, resources };
       };
     });
-
-  var affords = function (gs) {
-    var resources = gs.resources;
-    gs.vs.affords = tiles.BUILDING_COSTS.filter(function (building) {
-      return _.every(_.values(building)[0], function (amt, type) {
-        return resources[type] !== 'undefined' && resources[type] >= amt
-      })
-    });
-    return gs;
-  }
 
   var worldState$ = Rx.Observable
     .merge(initialGameState.get('initialWorldState$'))
 
-  var gameState$ = Rx.Observable
-    .merge(initialGameState.get('initialGameState$'))
-    //.merge(provides$)
-    .scan(function (gs, f) {
-      return f(gs);
+  var resources$ = Rx.Observable
+    .combineLatest(
+      initialGameState.get('initialBuildingsState$'),
+      initialGameState.get('initialResourcesState$'),
+      function (buildings, resources) {
+        return { buildings, resources };
+      }
+    )
+    .merge(provides$) /* SLOW */
+    .scan(function ({ buildings, resources }, f) {
+      return f({ buildings, resources });
+    }).map(function ({ buildings, resources }) {
+      return resources;
     });
 
+  var affords$ = resources$.map(function (resources) {
+    return tiles.BUILDING_COSTS.filter(function (building) {
+      return _.every(_.values(building)[0], function (amt, type) {
+        return typeof resources[type] !== 'undefined' && resources[type] >= amt
+      })
+    });
+  });
+
   var tileSelected$ = intent.get('tileClick$')
-    .combineLatest(worldState$, function ({y, x}, ws) {
+    .combineLatest(worldState$, function ({y, x}, world) {
       return function (vs) {
-        vs.tile = ws.world[y][x][ws.world[y][x].length - 1];
+        vs.lastSelectedTile = vs.tile;
+        vs.lastSelectedTile.selected = false;
+
+        var tile = world[y][x][world[y][x].length - 1];
+        tile.selected = true;
+        vs.tile = tile;
         return vs
       };
     });
@@ -51,12 +62,12 @@ module.exports = Cycle.createModel(function (intent, initialGameState, initialVi
     .merge(tileSelected$)
     .scan(function (vs, f) {
       return f(vs);
-    })
+    });
 
   return {
-    gameState$: gameState$,
+    resources$: resources$,
     viewState$: viewState$,
-    worldState$: worldState$
-    //affords$: gameState$.map(affords),
+    worldState$: worldState$,
+    affords$: affords$
   };
 });

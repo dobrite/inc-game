@@ -30,32 +30,20 @@ var genWorld = function () {
   return world;
 };
 
-var initialGameState = {
-  resources: {
-    gold: 250,
-    fish: 0,
-  },
-  buildings: [
-    new tiles.Fishery({y: 13, x: 5}),
-    new tiles.Fishery({y: 14, x: 5}),
-    new tiles.Fishery({y: 15, x: 5})
-  ],
-};
+var world = genWorld();
+var resources = { gold: 250, fish: 0 };
+var buildings = [
+  new tiles.Fishery({y: 13, x: 5}),
+  new tiles.Fishery({y: 14, x: 5}),
+  new tiles.Fishery({y: 15, x: 5})
+];
 
-var initialWorldState = {
-  world: genWorld()
-}
-
-// TODO this should maybe go in an appState that merges world, view and game state and
-// loads from localstorage
-//var savedGameState = JSON.parse(localStorage.getItem('inc-game-state')) || {};
-//var combinedGameState = _.assign(defaultGameState, savedGameState);
-
-initialGameState.buildings.map(function (bldg) {
-  initialWorldState.world[bldg.y][bldg.x].push(bldg);
+buildings.map(function (bldg) {
+  world[bldg.y][bldg.x].push(bldg);
 });
 
 module.exports = Cycle.createDataFlowSource({
-  initialGameState$: Rx.Observable.just(initialGameState),
-  initialWorldState$: Rx.Observable.just(initialWorldState)
+  initialResourcesState$: Rx.Observable.just(resources),
+  initialWorldState$: Rx.Observable.just(world),
+  initialBuildingsState$: Rx.Observable.just(buildings),
 });
