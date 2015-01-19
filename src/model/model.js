@@ -71,6 +71,6 @@ module.exports = Cycle.createModel(function (intent, initialGameState, initialVi
   return {
     viewState$: viewState$,
     worldState$: worldState$,
-    affords$: affords$
+    gameState$: affords$
   };
 });
