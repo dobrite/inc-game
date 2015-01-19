@@ -29,19 +29,23 @@ module.exports = Cycle.createModel(function (intent, initialGameState, initialVi
         return { buildings, resources };
       }
     )
-    .merge(provides$) /* SLOW */
+    .merge(provides$)
     .scan(function ({ buildings, resources }, f) {
       return f({ buildings, resources });
-    }).map(function ({ buildings, resources }) {
-      return resources;
-    });
+    })
 
-  var affords$ = resources$.map(function (resources) {
-    return tiles.BUILDING_COSTS.filter(function (building) {
+  var affords$ = resources$.map(function ({ buildings, resources }) {
+    var affords = tiles.BUILDING_COSTS.filter(function (building) {
       return _.every(_.values(building)[0], function (amt, type) {
         return typeof resources[type] !== 'undefined' && resources[type] >= amt
       })
     });
+
+    return {
+      buildings,
+      resources,
+      affords,
+    };
   });
 
   var tileSelected$ = intent.get('tileClick$')
@@ -65,7 +69,6 @@ module.exports = Cycle.createModel(function (intent, initialGameState, initialVi
     });
 
   return {
-    resources$: resources$,
     viewState$: viewState$,
     worldState$: worldState$,
     affords$: affords$

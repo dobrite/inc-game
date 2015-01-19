@@ -33,17 +33,19 @@ var vrResources = function (resources) {
 };
 
 var vrAffords = function (affords) {
-  return h('#affords', _.flatten(affords, _.keys).map(function (bldg) {
-    return h(
-      'button.bldg', {
-        type: 'button',
-        value: bldg,
-      }, bldg
-    );
-  }));
+  return h('#affords', _.flatten(affords, _.keys).map(
+    function (bldg) {
+      return h(
+        'button.bldg', {
+          type: 'button',
+          value: bldg,
+        }, bldg
+      );
+    }
+  ));
 };
 
-var vrStatus = function ({tile}, affords) {
+var vrStatus = function ({ tile }, affords) {
   return h('#status', [
     h('div', `type: ${tile.type}`),
     h('div', `x: ${tile.x}`),
@@ -52,7 +54,7 @@ var vrStatus = function ({tile}, affords) {
   ]);
 };
 
-var vrMain = function (resources, vs, ws, affords) {
+var vrMain = function (vs, ws, { resources, affords }) {
   return h('section', [
     vrMap(ws),
     vrResources(resources),
@@ -63,13 +65,11 @@ var vrMain = function (resources, vs, ws, affords) {
 module.exports = Cycle.createView(function (model) {
   return {
     vtree$: Rx.Observable.combineLatest(
-      model.get('resources$'),
       model.get('viewState$'),
       model.get('worldState$'),
-      model.get('affords$'),
-      function(resources, vs, ws, affords) {
-        console.log(resources);
-        return vrMain(resources, vs, ws, affords);
+      model.get('gameState$'),
+      function(vs, ws, gs) {
+        return vrMain(vs, ws, gs);
     })
   };
 });
