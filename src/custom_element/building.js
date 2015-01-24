@@ -33,8 +33,6 @@ var BuildingDataFlowNode = Cycle.createDataFlowNode(function (attrs) {
             onmouseenter: 'mouseenter$',
             onmouseleave: 'mouseleave$',
           });
-
-          return tileView(tile);
       })
     };
   });
