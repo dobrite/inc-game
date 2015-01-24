@@ -34,7 +34,7 @@ module.exports = Cycle.createModel(function (intent, initialGameState, initialVi
       return f({ buildings, resources });
     })
 
-  var affords$ = resources$.map(function ({ buildings, resources }) {
+  var gameState$ = resources$.map(function ({ buildings, resources }) {
     var affords = tiles.BUILDING_COSTS.filter(function (building) {
       return _.every(_.values(building)[0], function (amt, type) {
         return typeof resources[type] !== 'undefined' && resources[type] >= amt
@@ -71,6 +71,6 @@ module.exports = Cycle.createModel(function (intent, initialGameState, initialVi
   return {
     viewState$: viewState$,
     worldState$: worldState$,
-    gameState$: affords$
+    gameState$: gameState$
   };
 });
