@@ -4,7 +4,7 @@
   "main": "src/app.js",
   "author": "Dave O",
   "dependencies": {
-    "cyclejs": "0.9.2",
+    "cyclejs": "0.10.1",
     "lodash": "2.4.1"
   },
   "devDependencies": {
